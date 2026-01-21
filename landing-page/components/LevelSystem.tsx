@@ -183,7 +183,7 @@ export function LevelSystem() {
               </div>
 
               {/* 3D 캔버스 영역 */}
-              <div className="absolute inset-4 z-10">
+              <div className="absolute inset-4 z-10 overflow-hidden rounded-2xl">
                 {isLevelAvailable && LEVEL_MODELS[activeLevel as keyof typeof LEVEL_MODELS] ? (
                   <LowLevel3DWrapper liftLevel={activeStep} />
                 ) : (

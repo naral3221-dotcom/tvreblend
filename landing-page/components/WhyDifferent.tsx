@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
-import { motion } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, Variants } from "framer-motion";
 import dynamic from "next/dynamic";
 
 // 3D 실은 클라이언트에서만 렌더링 + 로딩 상태 처리
@@ -11,7 +11,7 @@ const CrystalThread3D = dynamic(
     ssr: false,
     loading: () => (
       <div className="w-full h-full flex items-center justify-center">
-        <div className="w-12 h-12 border-2 border-sky-400/30 border-t-sky-400 rounded-full animate-spin" />
+        <div className="w-12 h-12 border-2 border-amber-400/30 border-t-amber-400 rounded-full animate-spin" />
       </div>
     )
   }
@@ -40,429 +40,254 @@ const comparisonData = {
       { label: "시술 디자인", value: "완전 개인화 맞춤 시술" },
     ],
   },
+  // Differences array removed as we are using bentogrid
 };
 
-const differences = [
-  {
-    number: "01",
-    title: "실 자체가 다릅니다",
-    description:
-      "10년간의 임상 경험을 바탕으로 직접 설계한 실. 기성품으로는 불가능한 정밀한 리프팅 효과를 구현합니다.",
-  },
-  {
-    number: "02",
-    title: "시술 방식이 다릅니다",
-    description:
-      "얼굴 골격과 피부 두께를 분석한 맞춤 설계. 레이어별 정밀 삽입으로 자연스러우면서도 강력한 리프팅.",
-  },
-  {
-    number: "03",
-    title: "결과가 증명합니다",
-    description:
-      "평균 1.5년 이상 유지되는 효과. 재시술 고객의 95%가 만족을 표현한 검증된 시술입니다.",
-  },
-];
-
 export function WhyDifferent() {
-  const [mounted, setMounted] = useState(false);
-  const [threadType, setThreadType] = useState<ThreadType>("cog");
-  const [activeCard, setActiveCard] = useState(0);
+  // Use scroll hook from framer motion for parallax or trigger effects
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [threadType, setThreadType] = useState<ThreadType>("cog");
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // Bento Grid Animation Variants
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.2 }
+    }
+  };
 
-  // 스크롤 위치에 따라 활성 카드 감지
-  const handleScroll = useCallback(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
-
-    const scrollLeft = container.scrollLeft;
-    const cardWidth = 280 + 16; // 카드 너비 + gap
-    const newActiveCard = Math.round(scrollLeft / cardWidth);
-    setActiveCard(Math.min(newActiveCard, differences.length - 1));
-  }, []);
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" }
+    }
+  };
 
   return (
-    <section id="why-different" className="relative py-24 overflow-hidden">
-      {/* 화이트 크리스탈 배경 - 밝고 깨끗한 느낌 */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-50 via-white to-sky-50" />
-
-      {/* 크리스탈 컷 패턴 배경 */}
-      <div className="absolute inset-0 overflow-hidden">
-        {/* 은은한 글로우 */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[800px] h-[800px] bg-cyan-100/40 rounded-full blur-[200px]" />
-
-        {/* 크리스탈 컷 SVG 패턴 */}
-        <svg
-          className="absolute inset-0 w-full h-full opacity-[0.08]"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <defs>
-            <pattern
-              id="crystal-pattern"
-              x="0"
-              y="0"
-              width="120"
-              height="120"
-              patternUnits="userSpaceOnUse"
-            >
-              {/* 다이아몬드 형태의 크리스탈 컷 */}
-              <path
-                d="M60 0 L120 60 L60 120 L0 60 Z"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="0.5"
-                className="text-cyan-500"
-              />
-              {/* 내부 삼각형 패싯 */}
-              <path
-                d="M60 0 L60 60 L0 60 Z"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="0.3"
-                className="text-cyan-400"
-              />
-              <path
-                d="M60 0 L120 60 L60 60 Z"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="0.3"
-                className="text-sky-400"
-              />
-              <path
-                d="M60 120 L60 60 L120 60 Z"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="0.3"
-                className="text-cyan-400"
-              />
-              <path
-                d="M60 120 L0 60 L60 60 Z"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="0.3"
-                className="text-sky-400"
-              />
-              {/* 중심점 */}
-              <circle
-                cx="60"
-                cy="60"
-                r="2"
-                fill="currentColor"
-                className="text-cyan-300"
-              />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#crystal-pattern)" />
-        </svg>
-
-        {/* 프리즘 빛 반사 효과 - 정적 */}
-        <div className="absolute top-0 right-1/4 w-[300px] h-[600px] bg-gradient-to-b from-cyan-200/10 via-transparent to-transparent rotate-12 blur-2xl" />
-        <div className="absolute bottom-0 left-1/4 w-[200px] h-[400px] bg-gradient-to-t from-sky-200/10 via-transparent to-transparent -rotate-12 blur-2xl" />
-
-        {/* 상단 라이트 라인 */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-px bg-gradient-to-r from-transparent via-cyan-400/30 to-transparent" />
+    <section id="why-different" className="relative py-24 md:py-32 overflow-hidden bg-[#f9f8f7]">
+      {/* Warm Ambient Background */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-stone-300 to-transparent opacity-50" />
+        {/* Soft Warm Glow - Top Right */}
+        <div className="absolute top-[-10%] right-[-5%] w-[600px] h-[600px] bg-orange-100/40 rounded-full blur-[120px]" />
+        {/* Soft Warm Glow - Bottom Left */}
+        <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-rose-100/30 rounded-full blur-[100px]" />
       </div>
 
-      <div className="container-custom relative z-10">
-        {/* 섹션 헤더 */}
+      <div className="relative z-10 container mx-auto px-6 lg:px-12">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16 lg:mb-24"
+        >
+          <span className="block font-serif italic text-xl md:text-2xl text-stone-500 mb-4 tracking-wide">
+            The Science of Harmony
+          </span>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-stone-800 leading-[1.1]">
+            다름을 만드는<br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-yellow-600 to-amber-800">
+              세 가지 결정적 차이
+            </span>
+          </h2>
+        </motion.div>
+
+        {/* Bento Grid Layout */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-7xl mx-auto"
+        >
+          {/* Card 1: 3D Thread (Large/Tall) */}
+          <motion.div
+            variants={itemVariants}
+            className="md:col-span-1 row-span-2 relative group overflow-hidden rounded-[2rem] bg-white shadow-xl shadow-stone-200/50 border border-stone-100"
+          >
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-stone-50/50 pointer-events-none" />
+
+            <div className="relative h-[400px] md:h-full min-h-[500px] bg-[#0c0c0c] rounded-[2rem] m-2 overflow-hidden">
+              {/* 3D Thread Component */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <CrystalThread3D type={threadType} />
+                {/* Dark Overlay Gradient */}
+                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 to-transparent" />
+              </div>
+
+              {/* Toggles - Restored */}
+              <div className="absolute top-6 right-6 z-20 flex gap-2">
+                <button
+                  onClick={() => setThreadType("cog")}
+                  className={`px-3 py-1 text-[10px] font-bold tracking-widest uppercase rounded-full border transition-all duration-300 ${threadType === "cog"
+                      ? "bg-amber-500 border-amber-500 text-black"
+                      : "bg-white/10 border-white/20 text-white hover:bg-white/20"
+                    }`}
+                >
+                  Cog
+                </button>
+                <button
+                  onClick={() => setThreadType("fix")}
+                  className={`px-3 py-1 text-[10px] font-bold tracking-widest uppercase rounded-full border transition-all duration-300 ${threadType === "fix"
+                      ? "bg-amber-500 border-amber-500 text-black"
+                      : "bg-white/10 border-white/20 text-white hover:bg-white/20"
+                    }`}
+                >
+                  Fix
+                </button>
+              </div>
+
+              {/* Type Badge */}
+              <div className="absolute top-6 left-6 z-20">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[10px] font-bold tracking-widest text-white uppercase shadow-lg">
+                  <span className={`w-1.5 h-1.5 rounded-full ${threadType === 'cog' ? 'bg-amber-400' : 'bg-rose-400'}`} />
+                  RAPPO.L {threadType} TYPE
+                </span>
+              </div>
+
+              {/* Content */}
+              <div className="absolute bottom-0 left-0 w-full p-8 text-white">
+                <p className="text-amber-200 text-sm font-bold tracking-widest uppercase mb-2">01. Material</p>
+                <h3 className="text-3xl font-display font-medium mb-3">RAPPO.L</h3>
+                <p className="text-white/70 font-light leading-relaxed text-sm">
+                  기존 PDO 실의 한계를 넘은 특허 소재. <br />
+                  강력한 고정력과 유연함의 완벽한 밸런스.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Card 2: Method (Wide) */}
+          <motion.div
+            variants={itemVariants}
+            className="md:col-span-2 relative group overflow-hidden rounded-[2rem] bg-white p-8 md:p-12 shadow-xl shadow-stone-200/50 border border-stone-100 flex flex-col md:flex-row items-center gap-8"
+          >
+            <div className="flex-1 space-y-4">
+              <p className="text-amber-600 text-sm font-bold tracking-widest uppercase">02. Method</p>
+              <h3 className="text-3xl font-display font-bold text-stone-800">
+                얼굴 구조 맞춤형<br />
+                <span className="text-stone-500 italic font-serif">Deep Layer Architecture</span>
+              </h3>
+              <p className="text-stone-600 leading-relaxed font-light">
+                단순히 당기는 것이 아닙니다. 얼굴의 굴곡과 깊이에 맞춰<br className="hidden lg:block" />
+                실의 층(Layer)을 설계하여 자연스러운 입체감을 만듭니다.
+              </p>
+            </div>
+            {/* Abstract Visual for Architecture */}
+            <div className="w-full md:w-1/3 aspect-square relative rounded-full bg-gradient-to-tr from-stone-100 to-stone-50 border border-stone-200 flex items-center justify-center">
+              <div className="w-3/4 h-3/4 rounded-full border border-stone-300 relative animate-[spin_20s_linear_infinite]">
+                <div className="absolute top-0 left-1/2 -ml-1 w-2 h-2 bg-amber-400 rounded-full shadow-[0_0_10px_rgba(251,191,36,0.5)]" />
+              </div>
+              <div className="w-1/2 h-1/2 rounded-full border border-stone-300 relative animate-[spin_15s_linear_infinite_reverse]">
+                <div className="absolute bottom-0 left-1/2 -ml-1 w-2 h-2 bg-stone-400 rounded-full" />
+              </div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="font-serif italic text-stone-400 text-sm">Multi-Layer</span>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Card 3: Result (Normal) */}
+          <motion.div
+            variants={itemVariants}
+            className="md:col-span-1 relative group overflow-hidden rounded-[2rem] bg-stone-900 p-8 shadow-xl shadow-stone-900/20 text-white"
+          >
+            <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/20 rounded-full blur-3xl" />
+
+            <div className="relative z-10 h-full flex flex-col justify-between min-h-[240px]">
+              <div>
+                <p className="text-amber-400/80 text-sm font-bold tracking-widest uppercase mb-2">03. Result</p>
+                <h3 className="text-2xl font-display font-medium">지속력의 차이</h3>
+              </div>
+
+              <div>
+                <div className="flex items-baseline gap-2 mb-2">
+                  <span className="text-5xl lg:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-t from-white to-stone-300">1.5</span>
+                  <span className="text-xl text-stone-400">년 +</span>
+                </div>
+                <p className="text-stone-400 text-sm font-light">
+                  평균 유지 기간.<br />
+                  일반 실리프팅 대비 2배 이상의 지속력.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Card 4: Satisfaction or Detail (Normal) */}
+          <motion.div
+            variants={itemVariants}
+            className="md:col-span-1 relative group overflow-hidden rounded-[2rem] bg-white p-8 shadow-xl shadow-stone-200/50 border border-stone-100"
+          >
+            <p className="text-amber-600 text-sm font-bold tracking-widest uppercase mb-4">Satisfaction</p>
+            <div className="flex items-center gap-4 mb-6">
+              <div className="text-4xl font-serif text-stone-800 italic">95<span className="text-xl not-italic">%</span></div>
+              <div className="h-px flex-1 bg-stone-200" />
+            </div>
+            <p className="text-stone-600 text-sm font-light leading-relaxed">
+              재시술 고객 만족도.<br />
+              "다른 리프팅과는 확실히 다릅니다"
+            </p>
+          </motion.div>
+
+        </motion.div>
+
+        {/* Restored Comparison Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="max-w-5xl mx-auto mt-24"
         >
-          {/* 필기체 서브타이틀 */}
-          <p className="font-handwriting text-xl md:text-2xl mb-4">
-            <span className="text-slate-500">똑같은 실리프팅인데,</span>
-            <br />
-            <span className="text-cyan-600">왜 투명브이만 결과가 다를까요?</span>
-          </p>
-
-          {/* 메인 타이틀 */}
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-800 mb-6">
-            투명브이리프팅의
-            <br className="md:hidden" />
-            {" "}
-            <span className="bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-500 bg-clip-text text-transparent">
-              '결정적 디테일'
-            </span>
-          </h2>
-
-          {/* 일반체 서브타이틀 */}
-          <p className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            독자적 소재 <span className="font-bold text-slate-700">RAPPO.L</span>과
-            <br className="md:hidden" />
-            {" "}안면 구조 맞춤 설계의 만남,
-            <br />
-            시작부터 결과까지의 차이를 만듭니다.
-          </p>
-        </motion.div>
-
-        {/* 3D 실 + 비교 섹션 */}
-        <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
-          {/* 3D 실 뷰어 */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative"
-          >
-            <div className="relative aspect-square max-w-lg mx-auto overflow-hidden rounded-3xl">
-              {/* 크리스탈 프레임 - 밝은 버전 */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white via-sky-50/50 to-cyan-50 border border-cyan-200/50 shadow-xl shadow-cyan-100/30">
-                {/* 내부 다크 배경 (3D 뷰어용) */}
-                <div className="absolute inset-0 bg-gradient-to-br from-slate-800 via-slate-900 to-[#0a1628]" />
-              </div>
-
-              {/* 3D 캔버스 영역 */}
-              <div className="absolute inset-4 z-10 overflow-hidden rounded-2xl">
-                {mounted && <CrystalThread3D type={threadType} />}
-              </div>
-
-              {/* 코너 장식 - 프레임 둥글기(3xl)와 일치 */}
-              <div className="absolute top-0 left-0 w-10 h-10 border-t-2 border-l-2 border-cyan-400/60 rounded-tl-3xl z-20" />
-              <div className="absolute top-0 right-0 w-10 h-10 border-t-2 border-r-2 border-cyan-400/60 rounded-tr-3xl z-20" />
-              <div className="absolute bottom-0 left-0 w-10 h-10 border-b-2 border-l-2 border-cyan-400/60 rounded-bl-3xl z-20" />
-              <div className="absolute bottom-0 right-0 w-10 h-10 border-b-2 border-r-2 border-cyan-400/60 rounded-br-3xl z-20" />
-
-              {/* 타입 전환 버튼 - 우측 상단 */}
-              <div className="absolute top-4 right-4 z-30 flex gap-2">
-                <button
-                  onClick={() => setThreadType("cog")}
-                  className={`px-3 py-1.5 text-xs font-medium rounded-full transition-all duration-300 ${
-                    threadType === "cog"
-                      ? "bg-cyan-500 text-white shadow-lg shadow-cyan-400/40"
-                      : "bg-white/20 text-white/70 hover:bg-white/30 hover:text-white"
-                  }`}
-                >
-                  COG
-                </button>
-                <button
-                  onClick={() => setThreadType("fix")}
-                  className={`px-3 py-1.5 text-xs font-medium rounded-full transition-all duration-300 ${
-                    threadType === "fix"
-                      ? "bg-cyan-500 text-white shadow-lg shadow-cyan-400/40"
-                      : "bg-white/20 text-white/70 hover:bg-white/30 hover:text-white"
-                  }`}
-                >
-                  FIX
-                </button>
-              </div>
-            </div>
-
-            {/* 라벨 - 밝은 버전 */}
-            <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 z-20">
-              <span className="px-4 py-2 text-sm text-cyan-700 bg-white/90 backdrop-blur-sm rounded-full border border-cyan-200 shadow-md">
-                RAPPO.L {threadType === "cog" ? "COG" : "FIX"} 실
-              </span>
-            </div>
-          </motion.div>
-
-          {/* 비교 카드 */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="space-y-6"
-          >
-            {/* 일반 실리프팅 */}
-            <div className="p-6 rounded-2xl bg-slate-100/80 border border-slate-200 backdrop-blur-sm">
-              <h4 className="text-lg font-semibold text-slate-500 mb-4 flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-slate-400" />
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* General */}
+            <div className="p-8 rounded-[2rem] bg-stone-100 border border-stone-200/50">
+              <h4 className="text-xl font-display font-bold text-stone-500 mb-6 flex items-center gap-3">
+                <span className="w-2 h-2 rounded-full bg-stone-400" />
                 {comparisonData.general.title}
               </h4>
-              <div className="grid grid-cols-2 gap-4">
+              <ul className="space-y-4">
                 {comparisonData.general.items.map((item, i) => (
-                  <div key={i}>
-                    <p className="text-xs text-slate-400 mb-1">{item.label}</p>
-                    <p className="text-sm text-slate-600">{item.value}</p>
-                  </div>
+                  <li key={i} className="flex justify-between items-center text-sm">
+                    <span className="text-stone-400">{item.label}</span>
+                    <span className="font-medium text-stone-600">{item.value}</span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
 
-            {/* 투명브이리프팅 (하이라이트) */}
-            <div className="p-6 rounded-2xl bg-gradient-to-br from-white via-cyan-50/50 to-sky-50 border border-cyan-300/50 shadow-lg shadow-cyan-100/30 relative overflow-hidden">
-              {/* 빛나는 효과 */}
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-200/20 to-transparent animate-shine" />
+            {/* Premium */}
+            <div className="relative p-8 rounded-[2rem] bg-white border border-amber-100 shadow-2xl shadow-amber-500/10 overflow-hidden">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-amber-100/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
 
-              <h4 className="text-lg font-semibold text-cyan-700 mb-4 flex items-center gap-2 relative z-10">
-                <span className="w-2 h-2 rounded-full bg-cyan-500 shadow-lg shadow-cyan-400/50" />
+              <h4 className="relative z-10 text-xl font-display font-bold text-stone-800 mb-6 flex items-center gap-3">
+                <span className="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.6)]" />
                 {comparisonData.premium.title}
               </h4>
-              <div className="grid grid-cols-2 gap-4 relative z-10">
+
+              <ul className="relative z-10 space-y-4">
                 {comparisonData.premium.items.map((item, i) => (
-                  <div key={i}>
-                    <p className="text-xs text-cyan-600/70 mb-1">{item.label}</p>
+                  <li key={i} className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-sm gap-1">
+                    <span className="text-amber-600/70 font-medium">{item.label}</span>
                     {"isList" in item && item.isList ? (
-                      <ul className="space-y-1.5">
-                        {item.value.split("|").map((text, j) => (
-                          <li key={j} className="flex items-start gap-2 text-sm text-slate-800 font-medium">
-                            <span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-gradient-to-br from-cyan-400 to-sky-500 shrink-0" />
-                            <span>{text}</span>
-                          </li>
-                        ))}
-                      </ul>
+                      <span className="text-right font-bold text-stone-800">
+                        {item.value.split('|')[0]}
+                        <span className="block text-[10px] text-stone-400 font-normal">{item.value.split('|')[1]}</span>
+                      </span>
                     ) : (
-                      <p className="text-sm text-slate-800 font-medium">{item.value}</p>
+                      <span className="text-right font-bold text-stone-800">{item.value}</span>
                     )}
-                  </div>
+                  </li>
                 ))}
-              </div>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* 차별점 카드들 - 모바일: 가로 스크롤 / 데스크탑: 그리드 */}
-        <div className="relative">
-          {/* 모바일 가로 스크롤 - 스케일+페이드 효과 */}
-          <div className="md:hidden -mx-4 px-4">
-            <div
-              ref={scrollContainerRef}
-              onScroll={handleScroll}
-              className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
-            >
-              {differences.map((diff, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: 0.1 * index }}
-                  className={`group relative flex-shrink-0 w-[280px] p-6 rounded-2xl backdrop-blur-sm shadow-sm snap-center transition-all duration-300 ${
-                    activeCard === index
-                      ? "bg-white border-cyan-300 shadow-lg shadow-cyan-100/40 scale-100 opacity-100"
-                      : "bg-white/60 border-slate-200 scale-95 opacity-60"
-                  } border`}
-                >
-                  {/* 활성 카드 글로우 효과 */}
-                  {activeCard === index && (
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-50/50 to-sky-50/30 pointer-events-none" />
-                  )}
-
-                  {/* 넘버 */}
-                  <span className={`relative z-10 inline-block text-4xl font-bold bg-gradient-to-b bg-clip-text text-transparent mb-3 transition-all duration-300 ${
-                    activeCard === index
-                      ? "from-cyan-500 to-cyan-400"
-                      : "from-cyan-500/60 to-cyan-300/20"
-                  }`}>
-                    {diff.number}
-                  </span>
-
-                  {/* 내용 */}
-                  <h3 className={`relative z-10 text-lg font-semibold mb-2 transition-colors duration-300 ${
-                    activeCard === index ? "text-cyan-700" : "text-slate-800"
-                  }`}>
-                    {diff.title}
-                  </h3>
-                  <p className="relative z-10 text-sm text-slate-500 leading-relaxed">
-                    {diff.description}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-            {/* 스크롤 인디케이터 - 활성 상태 표시 */}
-            <div className="flex justify-center gap-2 mt-3">
-              {differences.map((_, index) => (
-                <div
-                  key={index}
-                  className={`h-2 rounded-full transition-all duration-300 ${
-                    activeCard === index
-                      ? "w-6 bg-cyan-500"
-                      : "w-2 bg-cyan-300/50"
-                  }`}
-                />
-              ))}
+              </ul>
             </div>
           </div>
-
-          {/* 데스크탑 그리드 */}
-          <div className="hidden md:grid md:grid-cols-3 gap-6">
-            {differences.map((diff, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2 * index }}
-                className="group relative p-8 rounded-2xl bg-white/80 border border-slate-200 backdrop-blur-sm shadow-sm hover:border-cyan-300 hover:shadow-lg hover:shadow-cyan-100/30 transition-all duration-500"
-              >
-                {/* 호버 글로우 */}
-                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-50/50 to-sky-50/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                {/* 넘버 */}
-                <span className="inline-block text-5xl font-bold bg-gradient-to-b from-cyan-500/60 to-cyan-300/20 bg-clip-text text-transparent mb-4">
-                  {diff.number}
-                </span>
-
-                {/* 내용 */}
-                <h3 className="relative z-10 text-xl font-semibold text-slate-800 mb-3 group-hover:text-cyan-700 transition-colors">
-                  {diff.title}
-                </h3>
-                <p className="relative z-10 text-sm text-slate-500 leading-relaxed group-hover:text-slate-600 transition-colors">
-                  {diff.description}
-                </p>
-
-                {/* 하단 라인 */}
-                <div className="absolute bottom-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* 하단 문구 */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-center mt-16 text-lg md:text-xl text-slate-600 font-medium"
-        >
-          "모두의 얼굴이 다르듯,
-          <br className="md:hidden" />
-          {" "}
-          <span className="text-cyan-600 font-semibold">당신의 리프팅도 달라야 합니다.</span>"
-        </motion.p>
-      </div>
-
-      {/* 하단 웨이브 디바이더 */}
-      <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
-        <svg
-          viewBox="0 0 1440 120"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-auto"
-          preserveAspectRatio="none"
-        >
-          <path
-            d="M0 120V60C240 20 480 0 720 20C960 40 1200 80 1440 60V120H0Z"
-            fill="url(#wave-gradient)"
-            fillOpacity="0.5"
-          />
-          <path
-            d="M0 120V80C360 40 720 60 1080 40C1260 30 1380 50 1440 60V120H0Z"
-            fill="url(#wave-gradient-2)"
-            fillOpacity="0.3"
-          />
-          <defs>
-            <linearGradient id="wave-gradient" x1="0" y1="0" x2="1440" y2="0">
-              <stop offset="0%" stopColor="#e0f2fe" />
-              <stop offset="50%" stopColor="#cffafe" />
-              <stop offset="100%" stopColor="#e0f2fe" />
-            </linearGradient>
-            <linearGradient id="wave-gradient-2" x1="0" y1="0" x2="1440" y2="0">
-              <stop offset="0%" stopColor="#0891b2" stopOpacity="0.1" />
-              <stop offset="50%" stopColor="#06b6d4" stopOpacity="0.15" />
-              <stop offset="100%" stopColor="#0891b2" stopOpacity="0.1" />
-            </linearGradient>
-          </defs>
-        </svg>
+        </motion.div>
       </div>
     </section>
   );

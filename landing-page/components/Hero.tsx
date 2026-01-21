@@ -1,158 +1,149 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
 
 export function Hero() {
+
   return (
     <section
       id="hero"
-      className="relative min-h-screen overflow-hidden"
+      className="relative min-h-[100dvh] overflow-hidden bg-[#0a0a0a]"
     >
-      {/* 배경 이미지 - 줌인 애니메이션 적용 */}
-      <motion.div
-        initial={{ scale: 1.1, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 2, ease: "easeOut" }}
-        className="absolute inset-0 bg-cover bg-no-repeat lg:bg-right"
-        style={{
-          backgroundImage: "url('/models/hero-bg.webp')",
-          backgroundPosition: "80% 30%",
-        }}
-      />
-      {/* PC에서 배경 위치 오버라이드 */}
-      <style>{`
-        @media (min-width: 1024px) {
-          section#hero > div:first-child {
-            background-position: right center !important;
-          }
-        }
-      `}</style>
-
-      {/* 시안 글로우 효과 - 펄스 애니메이션 */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* 1. Cinematic Background */}
+      <div className="absolute inset-0 z-0">
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{
-            opacity: [0, 0.3, 0.15, 0.25, 0.15],
-            scale: [0.8, 1.2, 1, 1.1, 1]
+          initial={{ scale: 1.2, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 2.5, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute inset-0 bg-[length:auto_120%] bg-[76%_45%] lg:bg-cover lg:bg-center will-change-transform"
+          style={{
+            backgroundImage: "url('/models/hero-bg.webp')",
           }}
-          transition={{
-            duration: 4,
-            ease: "easeInOut",
-            times: [0, 0.3, 0.5, 0.7, 1]
-          }}
-          className="absolute top-1/4 right-1/3 w-[500px] h-[500px] bg-cyan-400/30 rounded-full blur-[120px]"
         />
-        {/* 추가 글로우 - 좌측 하단 */}
+        {/* Cinematic Dark Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 lg:to-black/60 pointer-events-none" />
+      </div>
+
+      {/* 2. Ambient Glow Effects */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        {/* Top Right Cyan Glow */}
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{
-            opacity: [0, 0.2, 0.1, 0.15, 0.1],
-          }}
-          transition={{
-            duration: 5,
-            ease: "easeInOut",
-            delay: 0.5
-          }}
-          className="absolute bottom-1/4 left-1/4 w-[400px] h-[400px] bg-cyan-300/20 rounded-full blur-[150px]"
+          animate={{ opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-[20%] right-[-10%] w-[800px] h-[800px] bg-cyan-500/10 rounded-full blur-[120px]"
+        />
+        {/* Bottom Left Subtle Glow */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0.1, 0.3, 0.1] }}
+          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          className="absolute -bottom-[20%] -left-[10%] w-[600px] h-[600px] bg-blue-500/10 rounded-full blur-[100px]"
         />
       </div>
 
-      {/* 메인 콘텐츠 */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center lg:justify-start">
+      {/* 3. Main Content Layer */}
+      <div className="relative z-10 min-h-[100dvh] flex flex-col justify-center px-6 lg:px-0 lg:pl-[12vw]">
 
-        {/* 모바일: 글래스모피즘 카드 / PC: 일반 텍스트 */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="
-            text-section
-            absolute bottom-0 left-0 w-full
-            px-6 pb-24 pt-32
-            bg-gradient-to-t from-black/80 via-black/20 to-transparent
-            text-center
-            lg:bg-none lg:p-0 lg:w-auto lg:static lg:bg-transparent lg:text-left
-          "
-        >
-          {/* PC 위치 오버라이드 유지를 위한 기존 스타일 블록 보존 또는 Tailwind로 대체 고려. 
-              기존 코드가 style block을 사용하고 있으므로, mobile-only styles를 tailwind로 처리하고 
-              PC override는 기존 로직과 충돌하지 않도록 조정합니다. 
-          */}
-          <style>{`
-            @media (min-width: 1024px) {
-              section#hero .text-section {
-                position: absolute !important;
-                left: 22% !important;
-                top: 53% !important;
-                transform: translateY(-50%) !important;
-                bottom: auto !important;
-                background: none !important;
-                width: auto !important;
-                padding: 0 !important;
-                margin: 0 !important;
-              }
-            }
-          `}</style>
+        <div className="max-w-4xl mx-auto lg:mx-0 text-center lg:text-left lg:translate-x-[20px] lg:translate-y-[-11px]">
 
-          {/* 메인 타이틀 - IMK 스타일: 세미볼드 + 넓은 자간 */}
-          <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-semibold text-white lg:text-slate-800 mb-8 lg:mb-10 leading-[1.2] tracking-[0.02em]">
-            <span className="block lg:inline">투명브이</span>
-            <span className="text-cyan-400 lg:text-cyan-700">리프팅</span>
-          </h1>
+          {/* Eyebrow Text: Brand Tagline */}
+          <div className="overflow-hidden mb-4 lg:mb-8">
+            <motion.p
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="font-serif italic text-xl lg:text-2xl text-cyan-200/80 tracking-wide"
+            >
+              The Art of Defining Lines
+            </motion.p>
+          </div>
 
-          {/* 구분선 - 더 얇고 우아하게 */}
-          <div className="w-16 h-[2px] bg-white/60 lg:bg-slate-400 mb-8 lg:mb-10 mx-auto lg:mx-0" />
+          {/* Main Headline: Mask Reveal Effect */}
+          <div className="space-y-2 lg:space-y-0 mb-8 lg:mb-10">
+            {/* INVISIBLE */}
+            <div className="overflow-hidden">
+              <motion.h1
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                transition={{ duration: 1.2, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                className="font-display text-6xl md:text-8xl lg:text-[8rem] font-bold text-white leading-[0.9] tracking-tighter"
+              >
+                INVISIBLE
+              </motion.h1>
+            </div>
+            {/* V-LIFTING */}
+            <div className="overflow-hidden">
+              <motion.span
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                transition={{ duration: 1.2, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                className="block font-display text-6xl md:text-8xl lg:text-[8rem] font-bold text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.3)] lg:[-webkit-text-stroke:2px_rgba(255,255,255,0.4)] leading-[0.9] tracking-tighter"
+              >
+                V-LIFTING
+              </motion.span>
+            </div>
+            {/* Korean Badge - 별도 라인 */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.2 }}
+              className="pt-4 lg:pt-6"
+            >
+              <span className="inline-block px-4 py-1.5 border border-white/20 rounded-full text-xs lg:text-sm text-white/60 tracking-widest font-light">
+                투명브이 리프팅
+              </span>
+            </motion.div>
+          </div>
 
-          {/* 서브 타이틀 1 - 가벼운 세리프 */}
-          <p className="font-serif text-xl md:text-2xl lg:text-3xl text-white/90 lg:text-slate-700 mb-5 lg:mb-6 leading-relaxed font-normal tracking-wide">
-            "실리프팅의 <span className="text-white lg:text-slate-800">기준</span>을 바꾸다"
-          </p>
+          {/* Descriptive Text */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 1.4 }}
+            className="text-white/70 text-base md:text-lg lg:text-xl font-light leading-relaxed max-w-xl tracking-wide text-center lg:text-left"
+          >
+            <span className="text-white font-semibold">얼굴 구조를 완벽하게 이해하는 기술,</span><br />
+            <span className="text-white">자체 개발 6종 실로 완성하는</span><br />
+            가장 자연스럽고 강력한 리프팅을 경험하세요.
+          </motion.p>
 
-          {/* 서브 타이틀 2 - 얇고 가벼운 본문 */}
-          <p className="text-base md:text-lg lg:text-xl text-white/70 lg:text-slate-500 font-light tracking-[0.03em] leading-relaxed">
-            얼굴 구조를 읽는 리프팅,<br />
-            자체 개발 6종의 실로 완성합니다.
-          </p>
-        </motion.div>
+        </div>
       </div>
 
-      {/* 우측 하단 모델 정보 - PC만 표시 */}
+      {/* 4. Model Info (Clean Minimalist) */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.6 }}
-        className="absolute z-20 text-right hidden lg:block right-[20%] bottom-[3%]"
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 1, delay: 2 }}
+        className="absolute bottom-[46px] lg:bottom-[130px] right-6 lg:right-[380px] z-20 text-right"
       >
-        <p className="text-sm md:text-base font-medium text-white">
-          밸런스랩 전속모델
-        </p>
-        <p className="text-sm md:text-base font-medium text-white">
-          이가흔
-        </p>
+        <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 mb-1">BalanceLab Muse</p>
+        <p className="text-lg font-display text-white tracking-widest">Lee Ga-heun</p>
       </motion.div>
 
-      {/* 스크롤 인디케이터 */}
+      {/* 5. Scroll Indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 0.8 }}
+        transition={{ delay: 2.5, duration: 1 }}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20"
       >
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 2 }}
-          className="cursor-pointer"
-          onClick={() => {
-            document.getElementById("why-different")?.scrollIntoView({ behavior: "smooth" });
-          }}
+        <motion.button
+          onClick={() => document.getElementById("why-different")?.scrollIntoView({ behavior: "smooth" })}
+          className="flex flex-col items-center gap-2 group cursor-pointer p-4"
         >
-          <div className="flex flex-col items-center gap-2">
-            <span className="text-white text-xs tracking-widest uppercase">Scroll</span>
-            <ChevronDown className="w-6 h-6 text-white" />
+          <span className="text-[10px] uppercase tracking-[0.3em] text-white/50 group-hover:text-cyan-400 transition-colors duration-300">
+            Discover
+          </span>
+          <div className="w-[1px] h-12 bg-gradient-to-b from-white/20 to-white/0 overflow-hidden relative">
+            <motion.div
+              animate={{ y: [-20, 48] }}
+              transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
+              className="absolute top-0 left-0 w-full h-[50%] bg-cyan-400 blur-[1px]"
+            />
           </div>
-        </motion.div>
+        </motion.button>
       </motion.div>
 
     </section>

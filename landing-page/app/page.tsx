@@ -8,6 +8,7 @@ import { Benefits } from "@/components/Benefits";
 import { TrustSection } from "@/components/TrustSection";
 import { CTA } from "@/components/CTA";
 import { Footer } from "@/components/Footer";
+import { ReviewSlider } from "@/components/ReviewSlider";
 export default function Home() {
   return (
     <main className="min-h-screen">
@@ -33,7 +34,10 @@ export default function Home() {
       <Benefits />
       <TrustSection />
 
-      {/* 7. CTA - "상담 받아볼까" 전환 */}
+      {/* ReviewSlider - Best Selfie 후기 카드 슬라이더 */}
+      <ReviewSlider />
+
+      {/* CTA - "상담 받아볼까" 전환 */}
       <CTA />
 
       {/* Footer */}
