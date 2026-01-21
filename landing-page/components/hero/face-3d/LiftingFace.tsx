@@ -517,8 +517,8 @@ export function LiftingFace({ liftLevel }: LiftingFaceProps) {
 
   return (
     <group
-      position={[0, 0, 0]}
-      scale={2.0} // 조금 더 크게
+      position={[-3, 0, 0]}
+      scale={1.0} // 조금 더 크게
       rotation={[0, 0, 0]} // 회전값 초기화 (모델 본래 방향 확인)
     >
       <mesh ref={meshRef} geometry={mergedGeometry}>

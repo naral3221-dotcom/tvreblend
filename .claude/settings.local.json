@@ -4,7 +4,15 @@
       "Bash(npm run build:*)",
       "Bash(ls:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(npx sharp-cli:*)",
+      "Bash(npm run dev:*)",
+      "Bash(taskkill:*)",
+      "Bash(dir:*)",
+      "Bash(npx @gltf-transform/cli optimize:*)",
+      "Bash(npx @gltf-transform/cli inspect:*)",
+      "Bash(node -e:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat\\(WhyDifferent\\): 크리스탈 컷 배경 + 모바일 슬라이드 카드 완성\n\n- 파티클 애니메이션 → 크리스탈 컷 SVG 패턴으로 변경\n- 모바일 가로 스크롤 카드 \\(스케일+페이드 효과\\)\n- 활성 카드 인디케이터 추가\n- 모바일 텍스트 줄바꿈 처리\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }

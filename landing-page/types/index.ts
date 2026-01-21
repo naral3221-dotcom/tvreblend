@@ -88,6 +88,13 @@ export interface SolutionSectionContent {
 // ============================================
 // Level System Section
 // ============================================
+export interface LevelStep {
+  step: number;
+  name: string;
+  shapeKey: string;
+  description?: string;
+}
+
 export interface Level {
   level: number;
   title: string;
@@ -96,6 +103,8 @@ export interface Level {
   features: string[];
   target: string;
   popular: boolean;
+  available: boolean; // 활성화 여부 (준비 중이면 false)
+  steps: LevelStep[];
 }
 
 export interface LevelSystemContent {

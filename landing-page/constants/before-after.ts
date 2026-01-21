@@ -30,12 +30,12 @@ export const beforeAfterSectionContent: BeforeAfterSectionContent = {
       description: "확실한 V라인 리프팅",
       pairs: [
         {
-          beforeImage: "/before-after/level2-before.webp",
-          afterImage: "/before-after/level2-after.webp",
+          beforeImage: "/before-after/level2-before-1.webp",
+          afterImage: "/before-after/level2-after-1.webp",
         },
         {
-          beforeImage: "/before-after/level2-before-1.webp",
-          afterImage: "/before-after/level2-after.webp",
+          beforeImage: "/before-after/level2-before-2.webp",
+          afterImage: "/before-after/level2-after-2.webp",
         },
       ],
     },

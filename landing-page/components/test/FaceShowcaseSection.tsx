@@ -4,11 +4,11 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 
-// 3D 얼굴은 클라이언트에서만 렌더링
-const LiftingFace3D = dynamic(
+// 새로운 3D 모델 (Shape Key 기반)
+const LowLevel3DWrapper = dynamic(
   () =>
-    import("@/components/hero/face-3d/LiftingFace3D").then(
-      (mod) => mod.LiftingFace3D
+    import("@/components/hero/face-3d/LowLevel3DWrapper").then(
+      (mod) => mod.LowLevel3DWrapper
     ),
   { ssr: false }
 );
@@ -70,7 +70,7 @@ export function FaceShowcaseSection() {
 
         {/* 3D Model */}
         <div className="flex-1 w-full min-h-0 flex items-center justify-center">
-          <LiftingFace3D liftLevel={activeLevel} />
+          <LowLevel3DWrapper liftLevel={activeLevel} />
         </div>
 
         {/* Level Selection Buttons - 하단 */}

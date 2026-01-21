@@ -3,6 +3,7 @@
 import { Suspense, useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Environment, OrbitControls, Center, useProgress } from "@react-three/drei";
+import { Vector3 } from "three";
 import { LiftingFace } from "./LiftingFace";
 
 interface LiftingFace3DProps {
@@ -56,7 +57,7 @@ export function LiftingFace3D({ liftLevel }: LiftingFace3DProps) {
     <div className="w-full h-full min-h-[400px] cursor-grab active:cursor-grabbing relative z-10">
       <Canvas
         dpr={[1, 2]}
-        camera={{ position: [0, 0, 10], fov: 35 }}
+        camera={{ position: [-3, -2, 10], fov: 35 }}
         gl={{
           antialias: true,
           alpha: true,
@@ -92,6 +93,7 @@ export function LiftingFace3D({ liftLevel }: LiftingFace3DProps) {
           maxDistance={10}
           minPolarAngle={Math.PI / 2 - 0.4} // 너무 위에서 보지 못하게
           maxPolarAngle={Math.PI / 2 + 0.4} // 너무 아래에서 보지 못하게
+          target={new Vector3(-3, 0.8, 0)} // 모델 위치에 맞춰 카메라 타겟 조정
         />
       </Canvas>
 
