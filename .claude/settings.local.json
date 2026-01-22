@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: Shape Key 기반 3D 얼굴 모델 추가\n\n- LowLevel3D.tsx: Shape Key 애니메이션 지원 컴포넌트\n- LowLevel3DWrapper.tsx: Canvas 래퍼 컴포넌트\n- FaceShowcaseSection에 새 모델 적용\n- LOW LEVEL 3.glb 모델 파일 추가\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(git clone:*)",
+      "Bash(git pull:*)",
+      "Bash(git checkout:*)",
+      "Bash(git reset:*)",
+      "Bash(npm run dev:*)",
+      "Bash(git init:*)",
+      "Bash(git remote add:*)"
+    ]
+  }
+}
